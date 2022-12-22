@@ -1,10 +1,13 @@
-const closeModal = e => {
-    e.preventDefault();
+const BASE_URL = `http://localhost:5050`;
+
+const closeModal = callback => {
     const modal = document.querySelector('.modal');
     modal.remove();
+    callback();
 }
 
-const createModalMessage = (message, type) => {
+//creates a pop-up message to display info, warnings, and errors to the user
+const createModalMessage = (message, type, callback = () => { return; }) => {
     let modal = document.createElement('div');
     modal.classList.add('modal');
     switch(type.toLowerCase()){
@@ -24,7 +27,10 @@ const createModalMessage = (message, type) => {
     let modalButton = document.createElement('button');
     modalButton.classList.add('modal-btn');
     modalButton.textContent = 'OK';
-    modalButton.addEventListener('click', closeModal);
+    modalButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeModal(callback);
+    });
 
     let modalButtonsContainer = document.createElement('div');
     modalButtonsContainer.classList.add('buttons-container');
@@ -41,4 +47,6 @@ const createModalMessage = (message, type) => {
     document.body.appendChild(modal);
 }
 
-createModalMessage('How are you?', 'error');
+const navigateToGame = () => {
+    window.location.href = '/game';
+}

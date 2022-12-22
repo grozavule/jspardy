@@ -7,12 +7,30 @@ const confirmPasswordInput = document.querySelector('#confirm-password');
 
 registrationForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    let firstName = firstNameInput.value;
+    let lastName = lastNameInput.value;
+    let emailAddress = emailInput.value;
     let password = passwordInput.value;
     let confirmPassword = confirmPasswordInput.value;
 
+    //verify input
+    if(firstName.length <= 0 || lastName.length <=0 || emailAddress.length <=0 || password.length <= 0)
+    {
+        firstNameInput.classList.add('error');
+        lastNameInput.classList.add('error');
+        emailInput.classList.add('error');
+        passwordInput.classList.add('error');
+        confirmPasswordInput.classList.add('error');
+        createModalMessage(`All fields are required. Please complete the form.`, `error`);
+        return;
+    }
+    //verify the password was confirmed
     if(password !== confirmPassword)
     {
-        
+        passwordInput.classList.add('error');
+        confirmPasswordInput.classList.add('error');
+        createModalMessage(`Your passwords don't match`, `error`);
+        return;
     }
 
     let body = {
@@ -21,4 +39,10 @@ registrationForm.addEventListener('submit', (e) => {
         emailAddress: emailInput.value,
         password: passwordInput.value
     }
+
+    axios.post(`${BASE_URL}/api/register`, body)
+    .then(res => {
+        createModalMessage(res.data, 'info', navigateToGame);
+    })
+    .catch(error => createModalMessage(error.response.data, 'error'));
 })
