@@ -6,6 +6,7 @@ const emailInput = document.querySelector('#email-address');
 const passwordInput = document.querySelector('#password');
 const confirmPasswordInput = document.querySelector('#confirm-password');
 
+//handles user login requests
 loginForm.addEventListener('submit', e => {
     e.preventDefault();
     let loginEmail = document.querySelector('#login-email').value;
@@ -16,8 +17,6 @@ loginForm.addEventListener('submit', e => {
         password: loginPassword
     };
 
-    //console.log(body);
-
     axios.post(`${BASE_URL}/api/login`, body)
     .then(res => {
         sessionStorage.setItem('user', JSON.stringify(res.data));
@@ -25,7 +24,7 @@ loginForm.addEventListener('submit', e => {
     })
     .catch(error => createModalMessage(error.response.data, 'error'));
 })
-
+//handles user registration requests
 registrationForm.addEventListener('submit', e => {
     e.preventDefault();
     let firstName = firstNameInput.value;

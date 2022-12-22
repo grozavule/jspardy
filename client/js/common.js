@@ -50,3 +50,7 @@ const createModalMessage = (message, type, callback = () => { return; }) => {
 const navigateToGame = () => {
     window.location.href = '/game';
 }
+
+const navigateToHome = () => {
+    window.location.href = '/';
+}
