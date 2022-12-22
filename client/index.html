@@ -12,11 +12,15 @@
     <nav>
         <div id="logo">jsPardy</div>
         <div id="nav-buttons">
-            <button id="login">Login</button>
+            <form id="login-form">
+                <input type="email" id="login-email" maxlength="100" placeholder="Email Address" required />
+                <input type="password" id="login-password" maxlength="60" placeholder="Password" required />
+                <button id="login">Login</button>
+            </form>
         </div>
     </nav>
     <content>
-        <section>
+        <section id="registration">
             <div class="titlebar-box">
                 <div class="titlebar">
                     <h2>Register to play</h2>

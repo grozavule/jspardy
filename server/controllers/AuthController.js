@@ -1,27 +1,47 @@
 const sequelize = require('../includes/database');
 const bcrypt = require('bcryptjs');
 
-const checkDuplicateEmail = email => {
+const retrieveUserByEmail = email => {
     let promise = new Promise((resolve, reject) => {
         sequelize.query(`
-            select from users where email_address='${email}';
+            select * from users where email_address='${email}';
         `)
-        .then(dbRes => resolve(dbRes[0].length))
+        .then(dbRes => resolve(dbRes[0]))
         .catch(error => reject(new Error(error.response.data)));
     });
     return promise;
 }
 
 const AuthController = {
+    login: (req, res) => {
+        let {email, password} = req.body;
+
+        let promise = retrieveUserByEmail(email);
+        promise.then(
+            users => {
+                let {user_id, first_name, last_name, email_address, password: passwordHash} = users[0];
+                if(bcrypt.compareSync(password, passwordHash))
+                {
+                    delete users[0].password;
+                    res.status(200).send(users[0]);
+                }
+                else
+                {
+                    res.status(400).send(`Invalid username or password`);
+                }
+            },
+            error => res.status(400).send(`Invalid username/password`)
+        );
+    },
     register: (req, res) => {
         let {firstName, lastName, emailAddress, password} = req.body;
         
         //check if the email addres has already been used
-        let promise = checkDuplicateEmail(emailAddress);
+        let promise = retrieveUserByEmail(emailAddress);
         promise.then(
-            userCount => {
+            users => {
                 //if the user doe
-                if(userCount <= 0)
+                if(users.length <= 0)
                 {
                     //hash the password sent in the registration form
                     let salt = bcrypt.genSaltSync(10);

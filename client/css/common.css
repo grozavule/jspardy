@@ -55,6 +55,25 @@ nav {
     height:100px;
 }
 
+#nav-buttons {
+    display:flex;
+    flex-direction:row;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow:1;
+}
+
+#nav-buttons input {
+    margin-right:var(--default-padding);
+}
+
+#login-form {
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+    align-content: center;
+}
+
 button {
     border-radius:var(--border-radius-size);
     border:1px solid var(--color-primary);
@@ -71,6 +90,7 @@ button {
     text-shadow:var(--box-shadow);
     font-size:var(--heading-font-size);
     font-weight:bold;
+    flex-grow:1;
 }
 
 content {
@@ -120,7 +140,7 @@ label {
     font-weight:bold;
 }
 
-label, input { 
+#registration label, #registration input { 
     display:block;
     width:100%;
     margin-bottom:15px; 

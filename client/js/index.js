@@ -1,3 +1,4 @@
+const loginForm = document.querySelector('#login-form');
 const registrationForm = document.querySelector('#register-form');
 const firstNameInput = document.querySelector('#first-name');
 const lastNameInput = document.querySelector('#last-name');
@@ -5,7 +6,27 @@ const emailInput = document.querySelector('#email-address');
 const passwordInput = document.querySelector('#password');
 const confirmPasswordInput = document.querySelector('#confirm-password');
 
-registrationForm.addEventListener('submit', (e) => {
+loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    let loginEmail = document.querySelector('#login-email').value;
+    let loginPassword = document.querySelector('#login-password').value;
+
+    let body = {
+        email: loginEmail,
+        password: loginPassword
+    };
+
+    //console.log(body);
+
+    axios.post(`${BASE_URL}/api/login`, body)
+    .then(res => {
+        sessionStorage.setItem('user', JSON.stringify(res.data));
+        navigateToGame();
+    })
+    .catch(error => createModalMessage(error.response.data, 'error'));
+})
+
+registrationForm.addEventListener('submit', e => {
     e.preventDefault();
     let firstName = firstNameInput.value;
     let lastName = lastNameInput.value;
