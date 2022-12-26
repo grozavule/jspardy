@@ -16,7 +16,8 @@ app.use(cors());
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../client/index.html')));
 app.get('/game', (req, res) => res.sendFile(path.join(__dirname, '../client/game.html')));
 
-app.get('/db-migrate', DatabaseMigrationController.populate);//creates the database
+app.get('/api/db/migrate', DatabaseMigrationController.populate);//creates the database
+app.get('/api/db/categories', DatabaseMigrationController.populateCategories);//retrieves categories from API and saves them to db
 
 app.post('/api/register', AuthController.register);
 app.post('/api/login', AuthController.login);

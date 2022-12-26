@@ -1,13 +1,24 @@
-require('dotenv').config();
-let {DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+const axios = require('axios');
+const sequelize = require('../includes/database');
+const {JSERVICE_URL} = process.env;
 
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-    host: DB_HOST,
-    port: DB_PORT,
-    dialect: 'postgres',
-    logging: false
-});
+const stripSpecialChars = str => str.replaceAll(/\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\""|\;|\:/g, '')
+
+const retrieveCategories = () => {
+    let categories = [];
+    let promise = new Promise(async (resolve, reject) => {
+        for(let i = 0; i <= 2500; i += 100)
+        {
+            await axios.get(`${JSERVICE_URL}/api/categories?count=100&offset=${i}`)
+            .then(res => {
+                categories.push.apply(categories, res.data);
+            })
+            .catch(error => reject(new Error(error.response.data)));
+        }
+        resolve(categories);
+    });
+    return promise;
+}
 
 const DatabaseMigrationController = {
     populate: (req, res) => {
@@ -30,7 +41,8 @@ const DatabaseMigrationController = {
             );
             create table categories (
                 category_id SERIAL PRIMARY KEY,
-                category_name VARCHAR(50)
+                category_name VARCHAR(50),
+                jsservice_id INTEGER NOT NULL UNIQUE
             );
             create table questions (
                 question_id SERIAL PRIMARY KEY,
@@ -47,6 +59,27 @@ const DatabaseMigrationController = {
         `)
         .then(db => res.sendStatus(200))
         .catch(error => res.status(400).send(error.response.data));
+    },
+    populateCategories: (req, res) => {
+        let promise = retrieveCategories();
+        promise.then(
+            categories => {
+                let insertQuery = `insert into categories (category_name, jsservice_id) values \n`;
+                categories.forEach(category => insertQuery += `('${stripSpecialChars(category.title)}', ${category.id}),\n`);
+                
+                //trim off the final comma from the insert query
+                sequelize.query(insertQuery.substring(0, insertQuery.length - 2))
+                .then(dbRes => res.sendStatus(200))
+                .catch(error => {
+                    console.log(error);
+                    res.status(400).send(error);
+                });
+            },
+            error => {
+                console.log(error);
+                res.status(400).send(error);
+            }
+        );
     }
 }
 
