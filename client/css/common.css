@@ -193,3 +193,38 @@ input.error {
 .modal-body {
     padding:var(--default-padding);
 }
+
+/**** GAMEBOARD STYLES ****/
+#gameboard-container {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    justify-content:space-around;
+    align-items: stretch;
+    width:100vw;
+    margin-top:var(--default-padding);
+}
+
+.category-container {
+    display:flex;
+    flex-direction:column;
+    flex-wrap:nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.game-square {
+    width:15vw;
+    border:1px solid var(--color-tertiary);
+    background:var(--color-primary);
+    color:var(--color-tertiary);
+    border-radius:var(--border-radius-size);
+    padding:var(--default-padding);
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:var(--default-padding);
+}
+
+div.game-square {
+    cursor: pointer;
+}

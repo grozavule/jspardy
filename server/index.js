@@ -5,6 +5,7 @@ const path = require('path');
 
 const DatabaseMigrationController = require('./controllers/DatabaseMigrationController');
 const AuthController = require('./controllers/AuthController');
+const CategoryController = require('./controllers/CategoryController');
 
 const {SERVER_PORT} = process.env;
 
@@ -15,6 +16,8 @@ app.use(cors());
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../client/index.html')));
 app.get('/game', (req, res) => res.sendFile(path.join(__dirname, '../client/game.html')));
+
+app.get('/api/categories', CategoryController.getCategories);
 
 app.get('/api/db/migrate', DatabaseMigrationController.populate);//creates the database
 app.get('/api/db/categories', DatabaseMigrationController.populateCategories);//retrieves categories from API and saves them to db
