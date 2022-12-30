@@ -9,6 +9,7 @@ import { Gameboard } from './classes/Gameboard.js';
 import { Category } from './classes/Category.js';
 import { Question } from './classes/Question.js';
 import { CategoryQuestionAmountError } from './classes/CategoryQuestionAmountError.js';
+import { QuestionNotFoundError } from './classes/QuestionNotFoundError.js';
 
 const gameboard = new Gameboard();
 const gameContainer = document.querySelector('#gameboard-container');
@@ -40,6 +41,75 @@ const fetchQuestions = category => {
     return promise;
 }
 
+const showQuestion = (categoryId, questionId) => {
+    let category = gameboard.getCategory(categoryId);
+    let question = gameboard.getQuestion(categoryId, questionId);
+
+    console.log(category, question);
+
+    //create the modal container
+    let modal = document.createElement('div');
+    modal.classList.add('modal');
+    
+    //create the modal title
+    let modalCategoryTitle = document.createElement('span');
+    modalCategoryTitle.textContent = category.categoryName;
+    let modalQuestionValue = document.createElement('span');
+    modalQuestionValue.textContent = question.value + ' points';
+
+    //create the modal body container
+    let modalBody = document.createElement('div');
+    modalBody.classList.add('modal-body');
+
+    //create the modal body elements
+    let modalQuestionTitle = document.createElement('h1');
+    modalQuestionTitle.classList.add('title');
+    modalQuestionTitle.textContent = 'Question:';
+    let modalQuestionBody = document.createElement('p');
+    modalQuestionBody.textContent = question.question;
+
+    let modalBodySeparator = document.createElement('hr');
+    modalBodySeparator.classList.add('modal-separator');
+
+    let answerForm = document.createElement('form');
+    let answerLabel = document.createElement('label');
+    answerLabel.setAttribute('for', 'answer');
+    answerLabel.textContent = 'Answer:';
+    let answerInput = document.createElement('input');
+    answerInput.setAttribute('type', 'text');
+    answerForm.appendChild(answerLabel);
+    answerForm.appendChild(answerInput);
+
+    modalBody.appendChild(modalQuestionTitle);
+    modalBody.appendChild(modalQuestionBody);
+    modalBody.appendChild(modalBodySeparator);
+    modalBody.appendChild(answerForm);
+
+    //create the modal button
+    let modalButton = document.createElement('button');
+    modalButton.classList.add('modal-btn');
+    modalButton.textContent = 'OK';
+    modalButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeModal();
+    });
+
+    let modalButtonsContainer = document.createElement('div');
+    modalButtonsContainer.classList.add('buttons-container');
+    modalButtonsContainer.appendChild(modalButton);
+
+    let modalTitleContainer = document.createElement('header');
+    modalTitleContainer.classList.add('titlebar');
+    modalTitleContainer.appendChild(modalCategoryTitle);
+    modalTitleContainer.appendChild(modalQuestionValue);
+    
+    modal.appendChild(modalTitleContainer);
+    modal.appendChild(modalBody);
+    modal.appendChild(modalButtonsContainer);
+
+    document.body.appendChild(modal);
+}
+
 const buildCategory = (category) => {
     let promise = fetchQuestions(category);
     promise.then(
@@ -62,7 +132,24 @@ const buildCategory = (category) => {
                 questionBox.setAttribute('data-question', question.id);
                 questionBox.textContent = questionValue;
                 questionBox.addEventListener('click', e => {
-                    alert(`Category: ${category.categoryId} - Question: ${question.id}`);
+                    let categoryId = e.target.getAttribute('data-category');
+                    let questionId = e.target.getAttribute('data-question');
+
+                    try 
+                    {
+                        showQuestion(categoryId, questionId);
+                    } 
+                    catch(error) 
+                    {
+                        if(error instanceof QuestionNotFoundError)
+                        {
+                            createModalMessage(`Your question could not be found`, 'error');
+                        }
+                        else
+                        {
+                            throw error;
+                        }
+                    }
                 });
 
                 questionValue += 100;

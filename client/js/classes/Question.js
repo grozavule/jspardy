@@ -1,6 +1,6 @@
 class Question {
     constructor(id, answer, question, value, categoryId){
-        this.id = id;
+        this.questionId = id;
         this.answer = answer;
         this.question = question;
         this.value = value;

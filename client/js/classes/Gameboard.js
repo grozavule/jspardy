@@ -11,6 +11,10 @@ class Gameboard {
         }
     }
 
+    getCategory = categoryId => {
+        return this.categories.find(category => category.categoryId == categoryId);
+    }
+
     addQuestion = (categoryId, question) => {
         //console.log(categoryId, this.categories);
         let category = this.categories.find(cat => cat.categoryId === categoryId);
@@ -22,6 +26,16 @@ class Gameboard {
         {
             category.addQuestion(question);
         }
+    }
+
+    getQuestion = (categoryId, questionId) => {
+        let selectedCategory = this.getCategory(categoryId);
+        if(!selectedCategory)
+        {
+            console.log(`Question Category ${categoryId} was not found`);
+            return;
+        }
+        return selectedCategory.questions.find(question => question.questionId == questionId);
     }
 
     removeCategory = categoryId => {

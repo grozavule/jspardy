@@ -15,6 +15,10 @@ class Category {
             this.questions.push(question);
         }
     }
+
+    getQuestion = questionId => {
+        return 
+    }
 }
 
 export { Category };
