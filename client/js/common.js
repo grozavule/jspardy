@@ -1,9 +1,9 @@
 const BASE_URL = `http://localhost:5050`;
 const TRIVIA_API_BASE_URL = `http://jservice.io`;
 
-const closeModal = callback => {
-    const modal = document.querySelector('.modal');
-    modal.remove();
+const closeModal = (callback = () => {}) => {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(element => element.remove());
     callback();
 }
 

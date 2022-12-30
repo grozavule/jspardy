@@ -10,6 +10,7 @@ import { Category } from './classes/Category.js';
 import { Question } from './classes/Question.js';
 import { CategoryQuestionAmountError } from './classes/CategoryQuestionAmountError.js';
 import { QuestionNotFoundError } from './classes/QuestionNotFoundError.js';
+import { AxiosError } from './classes/AxiosError.js';
 
 const gameboard = new Gameboard();
 const gameContainer = document.querySelector('#gameboard-container');
@@ -21,7 +22,7 @@ const fetchCategories = numCategories => {
         .then(res => {
             resolve(res.data);
         })
-        .catch(error => reject(new Error(error.response.data)));
+        .catch(error => reject(new AxiosError(error.message)));
     });
     return promise;
 }
@@ -36,7 +37,7 @@ const fetchQuestions = category => {
             }
             resolve(res.data);
         })
-        .catch(error => reject(new Error(error)));
+        .catch(error => reject(new AxiosError(error.message)));
     });
     return promise;
 }
@@ -50,6 +51,7 @@ const showQuestion = (categoryId, questionId) => {
     //create the modal container
     let modal = document.createElement('div');
     modal.classList.add('modal');
+    modal.classList.add('question-modal');
     
     //create the modal title
     let modalCategoryTitle = document.createElement('span');
@@ -77,6 +79,7 @@ const showQuestion = (categoryId, questionId) => {
     answerLabel.textContent = 'Answer:';
     let answerInput = document.createElement('input');
     answerInput.setAttribute('type', 'text');
+    answerInput.setAttribute('id', 'answer-input');
     answerForm.appendChild(answerLabel);
     answerForm.appendChild(answerInput);
 
@@ -88,10 +91,19 @@ const showQuestion = (categoryId, questionId) => {
     //create the modal button
     let modalButton = document.createElement('button');
     modalButton.classList.add('modal-btn');
-    modalButton.textContent = 'OK';
+    modalButton.textContent = 'Submit';
     modalButton.addEventListener('click', (e) => {
         e.preventDefault();
+        let answer = document.querySelector('#answer-input').value;
         closeModal();
+        if(answer === question.answer)
+        {
+            createModalMessage(`That's correct!`, 'info');
+        }
+        else
+        {
+            createModalMessage(`Wrong answer!`, 'warning');
+        }
     });
 
     let modalButtonsContainer = document.createElement('div');
@@ -175,6 +187,11 @@ const buildCategory = (category) => {
                     buildCategory(category);
                 }
             ).catch(error => console.log(error));
+        }
+        //if Axios can't retrieve questions from the trivia API... 
+        else if(error instanceof AxiosError)
+        {
+            createModalMessage(`The game is struggling to find questions for you. Please try again later.`, 'error');
         }
     });
 }

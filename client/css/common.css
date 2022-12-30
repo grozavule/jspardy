@@ -179,6 +179,10 @@ input.error {
     padding-bottom:var(--default-padding);
 }
 
+.modal.question-modal {
+    min-width:500px;
+}
+
 .modal.warning, .modal.warning button {
     border:1px solid var(--color-warning);
     color:var(--color-warning);
