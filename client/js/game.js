@@ -15,6 +15,10 @@ import { AxiosError } from './classes/AxiosError.js';
 const gameboard = new Gameboard();
 const gameContainer = document.querySelector('#gameboard-container');
 
+let playerScoreContainer = document.querySelector('#player-score');
+let player = JSON.parse(user);
+playerScoreContainer.innerHTML = `${player.first_name}'s Score: <span id="score">${gameboard.getPlayerScore()}</span>`;
+
 const fetchCategories = numCategories => {
     //get random categories
     let promise = new Promise((resolve, reject) => {
@@ -44,9 +48,10 @@ const fetchQuestions = category => {
 
 const showQuestion = (categoryId, questionId) => {
     let category = gameboard.getCategory(categoryId);
-    let question = gameboard.getQuestion(categoryId, questionId);
+    let question = category.getQuestion(questionId);
 
-    console.log(category, question);
+    console.log(categoryId, category);
+    console.log(questionId, question);
 
     //create the modal container
     let modal = document.createElement('div');
@@ -73,6 +78,15 @@ const showQuestion = (categoryId, questionId) => {
     let modalBodySeparator = document.createElement('hr');
     modalBodySeparator.classList.add('modal-separator');
 
+    //create the modal button
+    let modalButton = document.createElement('button');
+    modalButton.classList.add('modal-btn');
+    modalButton.textContent = 'Submit';
+
+    let modalButtonsContainer = document.createElement('div');
+    modalButtonsContainer.classList.add('buttons-container');
+    modalButtonsContainer.appendChild(modalButton);
+    
     let answerForm = document.createElement('form');
     let answerLabel = document.createElement('label');
     answerLabel.setAttribute('for', 'answer');
@@ -82,33 +96,30 @@ const showQuestion = (categoryId, questionId) => {
     answerInput.setAttribute('id', 'answer-input');
     answerForm.appendChild(answerLabel);
     answerForm.appendChild(answerInput);
-
-    modalBody.appendChild(modalQuestionTitle);
-    modalBody.appendChild(modalQuestionBody);
-    modalBody.appendChild(modalBodySeparator);
-    modalBody.appendChild(answerForm);
-
-    //create the modal button
-    let modalButton = document.createElement('button');
-    modalButton.classList.add('modal-btn');
-    modalButton.textContent = 'Submit';
-    modalButton.addEventListener('click', (e) => {
+    answerForm.appendChild(modalButtonsContainer);
+    answerForm.addEventListener('submit', e => {
         e.preventDefault();
         let answer = document.querySelector('#answer-input').value;
         closeModal();
-        if(answer === question.answer)
+
+        //compares the user's answer to the question's answer, updated the user's score, and displays the outcome of the answer to the user
+        let userAnsweredCorrectly = answer.toLowerCase() === question.answer.toLowerCase();
+        let newScore = gameboard.updatePlayerScore(question.value, userAnsweredCorrectly);
+        document.querySelector('#score').textContent = newScore;
+        if(userAnsweredCorrectly)
         {
             createModalMessage(`That's correct!`, 'info');
         }
         else
         {
-            createModalMessage(`Wrong answer!`, 'warning');
+            createModalMessage(`Wrong! The correct answer was ${question.answer}`, 'warning');
         }
     });
 
-    let modalButtonsContainer = document.createElement('div');
-    modalButtonsContainer.classList.add('buttons-container');
-    modalButtonsContainer.appendChild(modalButton);
+    modalBody.appendChild(modalQuestionTitle);
+    modalBody.appendChild(modalQuestionBody);
+    modalBody.appendChild(modalBodySeparator);
+    modalBody.appendChild(answerForm);
 
     let modalTitleContainer = document.createElement('header');
     modalTitleContainer.classList.add('titlebar');
@@ -117,7 +128,7 @@ const showQuestion = (categoryId, questionId) => {
     
     modal.appendChild(modalTitleContainer);
     modal.appendChild(modalBody);
-    modal.appendChild(modalButtonsContainer);
+    //modal.appendChild(modalButtonsContainer);
 
     document.body.appendChild(modal);
 }

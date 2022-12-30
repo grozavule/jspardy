@@ -3,6 +3,7 @@ import { CategoryNotIncludedError } from './CategoryNotIncludedError.js';
 
 class Gameboard {
     categories = [];
+    #playerScore = 0;
     
     addCategory = category => {
         if(category instanceof Category)
@@ -28,6 +29,10 @@ class Gameboard {
         }
     }
 
+    getPlayerScore = () => {
+        return this.#playerScore;
+    }
+
     getQuestion = (categoryId, questionId) => {
         let selectedCategory = this.getCategory(categoryId);
         if(!selectedCategory)
@@ -40,6 +45,18 @@ class Gameboard {
 
     removeCategory = categoryId => {
         this.categories = this.categories.filter(category => category.categoryId !== categoryId);
+    }
+
+    updatePlayerScore = (points, isAdded) => {
+        if(isAdded)
+        {
+            this.#playerScore += points;
+        }
+        else
+        {
+            this.#playerScore -= points;
+        }
+        return this.#playerScore;
     }
 }
 

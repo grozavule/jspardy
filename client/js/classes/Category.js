@@ -17,7 +17,7 @@ class Category {
     }
 
     getQuestion = questionId => {
-        return 
+        return this.questions.find(question => question.questionId == questionId);
     }
 }
 

@@ -126,6 +126,13 @@ input {
     flex-grow:1;
 }
 
+#player-score {
+    font-size:var(--heading-font-size);
+    font-weight:bold;
+    text-shadow:var(--box-shadow);
+    color:var(--color-tertiary);
+}
+
 .title {
     font-size:var(--heading-font-size);
     margin-bottom:var(--default-padding);
