@@ -251,3 +251,10 @@ input.error {
 div.game-square {
     cursor: pointer;
 }
+
+.game-square.hidden {
+    border:none;
+    background:var(--color-secondary);
+    color:var(--color-secondary);
+    cursor:default;
+}

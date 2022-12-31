@@ -9,7 +9,7 @@ import { Gameboard } from './classes/Gameboard.js';
 import { Category } from './classes/Category.js';
 import { Question } from './classes/Question.js';
 import { CategoryQuestionAmountError } from './classes/CategoryQuestionAmountError.js';
-import { QuestionNotFoundError } from './classes/QuestionNotFoundError.js';
+// import { QuestionNotFoundError } from './classes/QuestionNotFoundError.js';
 import { AxiosError } from './classes/AxiosError.js';
 
 const gameboard = new Gameboard();
@@ -106,6 +106,7 @@ const showQuestion = (categoryId, questionId) => {
         let userAnsweredCorrectly = answer.toLowerCase() === question.answer.toLowerCase();
         let newScore = gameboard.updatePlayerScore(question.value, userAnsweredCorrectly);
         document.querySelector('#score').textContent = newScore;
+        gameboard.removeGameSpace(categoryId, questionId);
         if(userAnsweredCorrectly)
         {
             createModalMessage(`That's correct!`, 'info');
@@ -154,26 +155,7 @@ const buildCategory = (category) => {
                 questionBox.setAttribute('data-category', category.categoryId);
                 questionBox.setAttribute('data-question', question.id);
                 questionBox.textContent = questionValue;
-                questionBox.addEventListener('click', e => {
-                    let categoryId = e.target.getAttribute('data-category');
-                    let questionId = e.target.getAttribute('data-question');
-
-                    try 
-                    {
-                        showQuestion(categoryId, questionId);
-                    } 
-                    catch(error) 
-                    {
-                        if(error instanceof QuestionNotFoundError)
-                        {
-                            createModalMessage(`Your question could not be found`, 'error');
-                        }
-                        else
-                        {
-                            throw error;
-                        }
-                    }
-                });
+                questionBox.addEventListener('click', gameboard.displayQuestion);
 
                 questionValue += 100;
 
