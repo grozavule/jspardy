@@ -25,7 +25,7 @@ class Category {
             throw new QuestionNotFoundError();
         }
         this.#chosenQuestions[questionId] = true;
-        console.log(this.#chosenQuestions, this.questions);
+        //console.log(this.#chosenQuestions, this.questions);
         return question;
     }
 

@@ -2,6 +2,7 @@ import { Category } from './Category.js';
 import { Question } from './Question.js';
 import { CategoryNotIncludedError } from './CategoryNotIncludedError.js';
 import { QuestionNotFoundError } from './QuestionNotFoundError.js';
+import { AnswerSanitizer } from './AnswerSanitizer.js';
 
 class Gameboard {
     categories = [];
@@ -193,7 +194,8 @@ class Gameboard {
             {
                 throw new QuestionNotFoundError(`The question ID, ${questionId}, could not be found in category ID ${categoryId}`);
             }
-            let userAnsweredCorrectly = answer.toLowerCase() === question.answer.toLowerCase();
+            //let userAnsweredCorrectly = answer.toLowerCase() === question.answer.toLowerCase();
+            let userAnsweredCorrectly = AnswerSanitizer.sanitize(answer) === AnswerSanitizer.sanitize(question.answer);
             let newScore = this.updatePlayerScore(question.value, userAnsweredCorrectly);
             document.querySelector('#score').textContent = newScore;
             this.removeGameSpace(categoryId, questionId);
@@ -211,6 +213,7 @@ class Gameboard {
         }
         catch(error)
         {
+            console.log(error);
             createModalMessage(error.message, 'error');
         }
     }
