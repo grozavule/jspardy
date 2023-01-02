@@ -9,7 +9,6 @@ import { Gameboard } from './classes/Gameboard.js';
 import { Category } from './classes/Category.js';
 import { Question } from './classes/Question.js';
 import { CategoryQuestionAmountError } from './classes/CategoryQuestionAmountError.js';
-// import { QuestionNotFoundError } from './classes/QuestionNotFoundError.js';
 import { AxiosError } from './classes/AxiosError.js';
 
 const gameboard = new Gameboard();
@@ -19,6 +18,7 @@ let playerScoreContainer = document.querySelector('#player-score');
 let player = JSON.parse(user);
 playerScoreContainer.innerHTML = `${player.first_name}'s Score: <span id="score">${gameboard.getPlayerScore()}</span>`;
 
+//retrieves categories from the database
 const fetchCategories = numCategories => {
     //get random categories
     let promise = new Promise((resolve, reject) => {
@@ -31,6 +31,7 @@ const fetchCategories = numCategories => {
     return promise;
 }
 
+//retrieves questions for a given category from the API
 const fetchQuestions = category => {
     let promise = new Promise((resolve, reject) => {
         axios.get(`${TRIVIA_API_BASE_URL}/api/category?id=${category.jServiceId}`)
@@ -46,94 +47,7 @@ const fetchQuestions = category => {
     return promise;
 }
 
-const showQuestion = (categoryId, questionId) => {
-    let category = gameboard.getCategory(categoryId);
-    let question = category.getQuestion(questionId);
-
-    console.log(categoryId, category);
-    console.log(questionId, question);
-
-    //create the modal container
-    let modal = document.createElement('div');
-    modal.classList.add('modal');
-    modal.classList.add('question-modal');
-    
-    //create the modal title
-    let modalCategoryTitle = document.createElement('span');
-    modalCategoryTitle.textContent = category.categoryName;
-    let modalQuestionValue = document.createElement('span');
-    modalQuestionValue.textContent = question.value + ' points';
-
-    //create the modal body container
-    let modalBody = document.createElement('div');
-    modalBody.classList.add('modal-body');
-
-    //create the modal body elements
-    let modalQuestionTitle = document.createElement('h1');
-    modalQuestionTitle.classList.add('title');
-    modalQuestionTitle.textContent = 'Question:';
-    let modalQuestionBody = document.createElement('p');
-    modalQuestionBody.textContent = question.question;
-
-    let modalBodySeparator = document.createElement('hr');
-    modalBodySeparator.classList.add('modal-separator');
-
-    //create the modal button
-    let modalButton = document.createElement('button');
-    modalButton.classList.add('modal-btn');
-    modalButton.textContent = 'Submit';
-
-    let modalButtonsContainer = document.createElement('div');
-    modalButtonsContainer.classList.add('buttons-container');
-    modalButtonsContainer.appendChild(modalButton);
-    
-    let answerForm = document.createElement('form');
-    let answerLabel = document.createElement('label');
-    answerLabel.setAttribute('for', 'answer');
-    answerLabel.textContent = 'Answer:';
-    let answerInput = document.createElement('input');
-    answerInput.setAttribute('type', 'text');
-    answerInput.setAttribute('id', 'answer-input');
-    answerForm.appendChild(answerLabel);
-    answerForm.appendChild(answerInput);
-    answerForm.appendChild(modalButtonsContainer);
-    answerForm.addEventListener('submit', e => {
-        e.preventDefault();
-        let answer = document.querySelector('#answer-input').value;
-        closeModal();
-
-        //compares the user's answer to the question's answer, updated the user's score, and displays the outcome of the answer to the user
-        let userAnsweredCorrectly = answer.toLowerCase() === question.answer.toLowerCase();
-        let newScore = gameboard.updatePlayerScore(question.value, userAnsweredCorrectly);
-        document.querySelector('#score').textContent = newScore;
-        gameboard.removeGameSpace(categoryId, questionId);
-        if(userAnsweredCorrectly)
-        {
-            createModalMessage(`That's correct!`, 'info');
-        }
-        else
-        {
-            createModalMessage(`Wrong! The correct answer was ${question.answer}`, 'warning');
-        }
-    });
-
-    modalBody.appendChild(modalQuestionTitle);
-    modalBody.appendChild(modalQuestionBody);
-    modalBody.appendChild(modalBodySeparator);
-    modalBody.appendChild(answerForm);
-
-    let modalTitleContainer = document.createElement('header');
-    modalTitleContainer.classList.add('titlebar');
-    modalTitleContainer.appendChild(modalCategoryTitle);
-    modalTitleContainer.appendChild(modalQuestionValue);
-    
-    modal.appendChild(modalTitleContainer);
-    modal.appendChild(modalBody);
-    //modal.appendChild(modalButtonsContainer);
-
-    document.body.appendChild(modal);
-}
-
+//creates the UI elements for a category
 const buildCategory = (category) => {
     let promise = fetchQuestions(category);
     promise.then(
@@ -174,8 +88,8 @@ const buildCategory = (category) => {
             let categoryPromise = fetchCategories(1);
             categoryPromise.then(
                 categories => {
-                    let {category_id, category_name, jsservice_id} = categories[0];
-                    let category = new Category(category_id, category_name, jsservice_id);
+                    let {category_id, category_name, jservice_id} = categories[0];
+                    let category = new Category(category_id, category_name, jservice_id);
                     gameboard.addCategory(category);
                     buildCategory(category);
                 }
@@ -196,8 +110,8 @@ const buildGame = () => {
     categoryPromise.then(
         categories => {
             categories.forEach(category => {
-                let {category_id, category_name, jsservice_id} = category;
-                let gameCategory = new Category(category_id, category_name, jsservice_id);
+                let {category_id, category_name, jservice_id} = category;
+                let gameCategory = new Category(category_id, category_name, jservice_id);
                 gameboard.addCategory(gameCategory);
                 buildCategory(gameCategory);
             });
@@ -206,4 +120,3 @@ const buildGame = () => {
 }
 
 buildGame();
-//console.log(gameboard);

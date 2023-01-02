@@ -7,7 +7,7 @@ const stripSpecialChars = str => str.replaceAll(/\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\
 const retrieveCategories = () => {
     let categories = [];
     let promise = new Promise(async (resolve, reject) => {
-        for(let i = 0; i <= 2500; i += 100)
+        for(let i = 0; i <= 3000; i += 100)
         {
             await axios.get(`${JSERVICE_URL}/api/categories?count=100&offset=${i}`)
             .then(res => {
@@ -64,7 +64,7 @@ const DatabaseMigrationController = {
         let promise = retrieveCategories();
         promise.then(
             categories => {
-                let insertQuery = `insert into categories (category_name, jsservice_id) values \n`;
+                let insertQuery = `insert into categories (category_name, jservice_id) values \n`;
                 categories.forEach(category => insertQuery += `('${stripSpecialChars(category.title)}', ${category.id}),\n`);
                 
                 //trim off the final comma from the insert query

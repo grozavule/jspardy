@@ -258,3 +258,30 @@ div.game-square {
     color:var(--color-secondary);
     cursor:default;
 }
+
+/*** GAME OVER STYLES ***/
+content#game-over {
+    height:90vh;
+}
+
+#final-score-container {
+    margin-top:var(--default-padding);
+    color:var(--color-tertiary);
+}
+
+#final-score {
+    color:var(--color-tertiary);
+    font-size:85px;
+    font-weight:bold;
+    text-align:center;
+}
+
+#final-score-buttons {
+    margin-top:var(--default-padding);
+}
+
+#final-score-buttons > button {
+    display:block;
+    width:100%;
+    margin:var(--default-padding) 0;
+}

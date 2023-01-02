@@ -1,7 +1,9 @@
 import { Question } from './Question.js';
+import { QuestionNotFoundError } from './QuestionNotFoundError.js';
 
 class Category {
     questions = [];
+    #chosenQuestions = [];
 
     constructor(categoryId, categoryName, jServiceId){
         this.categoryId = categoryId;
@@ -17,7 +19,17 @@ class Category {
     }
 
     getQuestion = questionId => {
-        return this.questions.find(question => question.questionId == questionId);
+        let question = this.questions.find(question => question.questionId == questionId);
+        if(!question instanceof Question)
+        {
+            throw new QuestionNotFoundError();
+        }
+        this.#chosenQuestions.push(questionId);
+        return question;
+    }
+
+    hasQuestionsRemaining = () => {
+        return this.#chosenQuestions.length < this.questions.length;
     }
 }
 

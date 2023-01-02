@@ -111,9 +111,14 @@ class Gameboard {
         }
     }
 
-    getCategory = categoryId => {
-        return this.categories.find(category => category.categoryId == categoryId);
+    navigateToGameOver = () => {
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        user.gameScore = this.#playerScore;
+        sessionStorage.setItem('user', JSON.stringify(user));
+        window.location.href='/end';
     }
+
+    getCategory = categoryId => this.categories.find(category => category.categoryId == categoryId);
 
     addQuestion = (categoryId, question) => {
         //console.log(categoryId, this.categories);
@@ -128,9 +133,7 @@ class Gameboard {
         }
     }
 
-    getPlayerScore = () => {
-        return this.#playerScore;
-    }
+    getPlayerScore = () => this.#playerScore;
 
     getQuestion = (categoryId, questionId) => {
         let selectedCategory = this.getCategory(categoryId);
@@ -139,7 +142,14 @@ class Gameboard {
             console.log(`Question Category ${categoryId} was not found`);
             return;
         }
-        return selectedCategory.questions.find(question => question.questionId == questionId);
+        return selectedCategory.getQuestion(questionId);
+    }
+
+    isGameOver = () => {
+        if(this.categories.every(category => !category.hasQuestionsRemaining()))
+        {
+            this.navigateToGameOver();
+        }
     }
 
     removeCategory = categoryId => {
@@ -192,11 +202,11 @@ class Gameboard {
             //compares the user's answer to the question's answer, updated the user's score, and displays the outcome of the answer to the user
             if(userAnsweredCorrectly)
             {
-                createModalMessage(`That's correct!`, 'info');
+                createModalMessage(`That's correct!`, 'info', this.isGameOver);
             }
             else
             {
-                createModalMessage(`Wrong! The correct answer was ${question.answer}`, 'warning');
+                createModalMessage(`Wrong! The correct answer was ${question.answer}`, 'warning', this.isGameOver);
             }
         }
         catch(error)

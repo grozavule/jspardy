@@ -16,6 +16,7 @@ app.use(cors());
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../client/index.html')));
 app.get('/game', (req, res) => res.sendFile(path.join(__dirname, '../client/game.html')));
+app.get('/end', (req, res) => res.sendFile(path.join(__dirname, '../client/end.html')));
 
 app.get('/api/categories', CategoryController.getCategories);
 
