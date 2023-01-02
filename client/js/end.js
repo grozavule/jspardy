@@ -6,7 +6,7 @@ if(!user)
 }
 
 let score = document.querySelector('#final-score');
-score.textContent = ((user.gameScore > 0) ? user.gameScore : '2400');
+score.textContent = user.gameScore;
 
 let newGameButton = document.querySelector('#new-game-button');
 newGameButton.addEventListener('click', e => {

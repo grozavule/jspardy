@@ -11,12 +11,7 @@ const closeModal = (callback = () => {}) => {
 const createModalMessage = (message, type, callback = () => { return; }) => {
     let modal = document.createElement('div');
     modal.classList.add('modal');
-    switch(type.toLowerCase()){
-        case 'error':
-        case 'warning':
-            modal.classList.add(type);
-            break;
-    }
+    modal.classList.add(type);
     
     let modalTitle = document.createElement('h1');
     modalTitle.textContent = type[0].toUpperCase() + type.substr(1);

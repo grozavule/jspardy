@@ -3,7 +3,7 @@ import { QuestionNotFoundError } from './QuestionNotFoundError.js';
 
 class Category {
     questions = [];
-    #chosenQuestions = [];
+    #chosenQuestions = {};
 
     constructor(categoryId, categoryName, jServiceId){
         this.categoryId = categoryId;
@@ -24,12 +24,13 @@ class Category {
         {
             throw new QuestionNotFoundError();
         }
-        this.#chosenQuestions.push(questionId);
+        this.#chosenQuestions[questionId] = true;
+        console.log(this.#chosenQuestions, this.questions);
         return question;
     }
 
     hasQuestionsRemaining = () => {
-        return this.#chosenQuestions.length < this.questions.length;
+        return Object.keys(this.#chosenQuestions).length < this.questions.length;
     }
 }
 

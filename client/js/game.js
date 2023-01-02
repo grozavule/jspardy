@@ -1,9 +1,11 @@
 //verify that the user is logged in
-let user = sessionStorage.getItem('user');
+let user = JSON.parse(sessionStorage.getItem('user'));
 if(!user)
 {
     navigateToHome();
 }
+user.gameScore = 0;
+sessionStorage.setItem('user', JSON.stringify(user));
 
 import { Gameboard } from './classes/Gameboard.js';
 import { Category } from './classes/Category.js';
@@ -15,8 +17,7 @@ const gameboard = new Gameboard();
 const gameContainer = document.querySelector('#gameboard-container');
 
 let playerScoreContainer = document.querySelector('#player-score');
-let player = JSON.parse(user);
-playerScoreContainer.innerHTML = `${player.first_name}'s Score: <span id="score">${gameboard.getPlayerScore()}</span>`;
+playerScoreContainer.innerHTML = `${user.first_name}'s Score: <span id="score">${gameboard.getPlayerScore()}</span>`;
 
 //retrieves categories from the database
 const fetchCategories = numCategories => {

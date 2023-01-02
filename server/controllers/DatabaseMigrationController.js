@@ -65,7 +65,13 @@ const DatabaseMigrationController = {
         promise.then(
             categories => {
                 let insertQuery = `insert into categories (category_name, jservice_id) values \n`;
-                categories.forEach(category => insertQuery += `('${stripSpecialChars(category.title)}', ${category.id}),\n`);
+                categories.forEach(category => {
+                    let {id, title, clues_count} = category;
+                    if(clues_count >= 5)
+                    {
+                        insertQuery += `('${stripSpecialChars(title)}', ${id}),\n`;
+                    }
+                });
                 
                 //trim off the final comma from the insert query
                 sequelize.query(insertQuery.substring(0, insertQuery.length - 2))

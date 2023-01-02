@@ -267,6 +267,7 @@ content#game-over {
 #final-score-container {
     margin-top:var(--default-padding);
     color:var(--color-tertiary);
+    text-align:center;
 }
 
 #final-score {
