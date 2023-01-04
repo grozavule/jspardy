@@ -82,12 +82,8 @@ const DatabaseMigrationController = {
                     console.log(error);
                     res.status(400).send(error);
                 });
-            },
-            error => {
-                console.log(error);
-                res.status(400).send(error);
             }
-        );
+        ).catch(error => console.log(error));
     }
 }
 
