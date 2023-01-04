@@ -63,6 +63,7 @@ const DatabaseMigrationController = {
     },
     populateCategories: (req, res) => {
         let promise = retrieveCategories();
+        console.log(promise);
         promise.then(
             categories => {
                 let insertQuery = `insert into categories (category_name, jservice_id) values \n`;
