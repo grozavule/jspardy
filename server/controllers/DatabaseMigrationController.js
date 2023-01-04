@@ -6,10 +6,10 @@ const stripSpecialChars = str => str.replaceAll(/\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\
 
 const retrieveCategories = () => {
     let categories = [];
-    let promise = new Promise(async (resolve, reject) => {
+    let promise = new Promise((resolve, reject) => {
         for(let i = 0; i <= 3000; i += 100)
         {
-            await axios.get(`${JSERVICE_URL}/api/categories?count=100&offset=${i}`)
+            axios.get(`${JSERVICE_URL}/api/categories?count=100&offset=${i}`)
             .then(res => {
                 categories.push.apply(categories, res.data);
             })
@@ -61,8 +61,8 @@ const DatabaseMigrationController = {
         .then(db => res.sendStatus(200))
         .catch(error => res.status(400).send(error.response.data));
     },
-    populateCategories: (req, res) => {
-        let promise = retrieveCategories();
+    populateCategories: async (req, res) => {
+        let promise = await retrieveCategories();
         console.log(promise);
         promise.then(
             categories => {
