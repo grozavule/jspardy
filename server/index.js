@@ -20,7 +20,6 @@ app.get('/game', (req, res) => res.sendFile(path.join(__dirname, '../client/game
 app.get('/end', (req, res) => res.sendFile(path.join(__dirname, '../client/end.html')));
 
 app.get('/api/categories', CategoryController.getCategories);
-app.post('/api/answer', SpellCheckController.checkAnswer);
 
 app.get('/api/db/migrate', DatabaseMigrationController.populate);//creates the database
 app.get('/api/db/categories', DatabaseMigrationController.populateCategories);//retrieves categories from API and saves them to db
