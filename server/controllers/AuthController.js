@@ -7,11 +7,7 @@ const retrieveUserByEmail = email => {
             select * from users where email_address='${email}';
         `)
         .then(dbRes => {
-            if(dbRes[0].length > 0)
-            {
-                resolve(dbRes[0])
-            }
-            throw new Error(`User does not exist`);
+            resolve(dbRes[0]);
         })
         .catch(error => reject(new Error(error.message)));
     });
@@ -25,6 +21,11 @@ const AuthController = {
         let promise = retrieveUserByEmail(email);
         promise.then(
             users => {
+                if(users.length <= 0)
+                {
+                    res.status(400).send(`Invalid username or password`);
+                    return;
+                }
                 let {user_id, first_name, last_name, email_address, password: passwordHash} = users[0];
                 if(bcrypt.compareSync(password, passwordHash))
                 {
@@ -56,9 +57,13 @@ const AuthController = {
                     //create the new user in the database
                     sequelize.query(`
                         insert into users (first_name, last_name, email_address, password) values
-                        ('${firstName}', '${lastName}', '${emailAddress}', '${password}');
+                        ('${firstName}', '${lastName}', '${emailAddress}', '${password}')
+                        returning user_id, first_name, last_name, email_address;
                     `)
-                    .then(dbRes => res.status(200).send(`Your user has been successfully created!`))
+                    .then(dbRes => {
+                        delete dbRes[0].password;
+                        res.status(200).send(dbRes[0]);
+                    })
                     .catch(error => res.status(400).send(error.response.data));
                 }
                 else

@@ -6,6 +6,7 @@ if(!user)
 }
 user.gameScore = 0;
 sessionStorage.setItem('user', JSON.stringify(user));
+console.log(user);
 
 import { Gameboard } from './classes/Gameboard.js';
 import { Category } from './classes/Category.js';
@@ -15,6 +16,8 @@ import { AxiosError } from './classes/AxiosError.js';
 
 const gameboard = new Gameboard();
 const gameContainer = document.querySelector('#gameboard-container');
+let playerScoreContainer = document.querySelector('#player-score');
+playerScoreContainer.innerHTML = `${user.first_name}'s Score: <span id="score">${gameboard.getPlayerScore()}</span>`;
 
 const shiftGameboard = e => {
     const contentContainer = document.querySelector('#game');
@@ -66,10 +69,7 @@ const shiftGameboard = e => {
 const arrows = document.querySelectorAll('.arrow');
 arrows.forEach(arrow => {
     arrow.addEventListener('click', shiftGameboard);
-})
-
-let playerScoreContainer = document.querySelector('#player-score');
-playerScoreContainer.innerHTML = `${user.first_name}'s Score: <span id="score">${gameboard.getPlayerScore()}</span>`;
+});
 
 //retrieves categories from the database
 const fetchCategories = numCategories => {

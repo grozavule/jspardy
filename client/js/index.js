@@ -6,19 +6,37 @@ const emailInput = document.querySelector('#email-address');
 const passwordInput = document.querySelector('#password');
 const confirmPasswordInput = document.querySelector('#confirm-password');
 
-const displayLoginError = message => {
-    let container = document.querySelector('#login .titlebar-box-content');
-
+const displayAuthMessage = (message, messageType, authType) => {
+    if(authType === 'login')
+    {
+        var container = document.querySelector('#login .titlebar-box-content');
+    }
+    else if(authType === 'registration')
+    {
+        var container = document.querySelector('#registration .titlebar-box-content');
+    }
+    else
+    {
+        console.log(authType, 'not defined');
+    }
     let messageContainer = document.createElement('div');
-    messageContainer.classList.add('error-message');
+    messageContainer.classList.add('titlebar-message');
+    messageContainer.classList.add(messageType);
     messageContainer.textContent = message;
 
     container.prepend(messageContainer);
 }
 
+const removeAuthMessages = () => {
+    let messages = document.querySelectorAll('.titlebar-message');
+    messages.forEach(message => message.remove());
+}
+
 //handles user login requests
 loginForm.addEventListener('submit', e => {
     e.preventDefault();
+    removeAuthMessages();
+
     let loginEmail = document.querySelector('#login-email').value;
     let loginPassword = document.querySelector('#login-password').value;
 
@@ -34,13 +52,14 @@ loginForm.addEventListener('submit', e => {
     })
     .catch(error => {
         console.log(error);
-        displayLoginError(error.response.data);
-        //createModalMessage(error.response.data, 'error')
+        displayAuthMessage(error.response.data, 'error', 'login');
     });
 })
 //handles user registration requests
 registrationForm.addEventListener('submit', e => {
     e.preventDefault();
+    removeAuthMessages();
+
     let firstName = firstNameInput.value;
     let lastName = lastNameInput.value;
     let emailAddress = emailInput.value;
@@ -55,15 +74,23 @@ registrationForm.addEventListener('submit', e => {
         emailInput.classList.add('error');
         passwordInput.classList.add('error');
         confirmPasswordInput.classList.add('error');
-        createModalMessage(`All fields are required. Please complete the form.`, `error`);
+        displayAuthMessage(`All fields are required. Please complete the form.`, `warning`, 'registration');
         return;
     }
     //verify the password was confirmed
     if(password !== confirmPassword)
     {
-        passwordInput.classList.add('error');
-        confirmPasswordInput.classList.add('error');
-        createModalMessage(`Your passwords don't match`, `error`);
+        passwordInput.classList.add('warning');
+        confirmPasswordInput.classList.add('warning');
+        displayAuthMessage(`Your passwords don't match`, `warning`, 'registration');
+        return;
+    }
+
+    if(password.length < 8)
+    {
+        passwordInput.classList.add('warning');
+        confirmPasswordInput.classList.add('warning');
+        displayAuthMessage(`Your password doesn't meet the complexity requirements. Please ensure it is at least 8 characters long.`, `warning`, `registration`);
         return;
     }
 
@@ -76,7 +103,8 @@ registrationForm.addEventListener('submit', e => {
 
     axios.post(`${BASE_URL}/api/register`, body)
     .then(res => {
-        createModalMessage(res.data, 'info', navigateToGame);
+        sessionStorage.setItem('user', JSON.stringify(res.data[0]));
+        createModalMessage(`Your user was successfully created`, 'info', navigateToGame);
     })
-    .catch(error => createModalMessage(error.response.data, 'error'));
+    .catch(error => displayAuthMessage(error.response.data, 'error', 'registration'));
 })

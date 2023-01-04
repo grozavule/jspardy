@@ -179,16 +179,31 @@ input {
     align-items: center;;
 }
 
-.error-message {
-    background:var(--color-error);
+.titlebar-message {
     color:var(--color-tertiary);
     font-weight:bold;
     padding:var(--default-padding);
     margin-bottom:var(--default-padding);
 }
 
+.titlebar-message.error {
+    background:var(--color-error);
+}
+
+.titlebar-message.warning {
+    background:var(--color-warning);
+}
+
+.titlebar-message.info {
+    background:var(--color-primary);
+}
+
 input.error {
     border:1px solid var(--color-error);
+}
+
+input.warning {
+    border:1px solid var(--color-warning);
 }
 
 .modal {
