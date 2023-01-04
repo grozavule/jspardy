@@ -6,7 +6,6 @@ const path = require('path');
 const DatabaseMigrationController = require('./controllers/DatabaseMigrationController');
 const AuthController = require('./controllers/AuthController');
 const CategoryController = require('./controllers/CategoryController');
-const SpellCheckController = require('./controllers/SpellCheckController');
 
 const {SERVER_PORT} = process.env;
 
