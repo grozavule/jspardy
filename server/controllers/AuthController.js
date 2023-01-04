@@ -66,7 +66,7 @@ const AuthController = {
                     res.status(400).send(`This email address has already been registered. Please log in.`);
                 }
             },
-            error => res.status(400).send(error.response.data)
+            error => res.status(400).send(error.message)
         );
 
     }
