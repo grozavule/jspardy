@@ -22,6 +22,7 @@ const retrieveCategories = () => {
 
 const DatabaseMigrationController = {
     populate: (req, res) => {
+        console.log('Database migration in progress...');
         sequelize.query(`
             create table users (
                 user_id SERIAL PRIMARY KEY,
