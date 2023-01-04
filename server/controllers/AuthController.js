@@ -6,8 +6,14 @@ const retrieveUserByEmail = email => {
         sequelize.query(`
             select * from users where email_address='${email}';
         `)
-        .then(dbRes => resolve(dbRes[0]))
-        .catch(error => reject(new Error(error.response.data)));
+        .then(dbRes => {
+            if(dbRes[0].length > 0)
+            {
+                resolve(dbRes[0])
+            }
+            throw new Error(`User does not exist`);
+        })
+        .catch(error => reject(new Error(error.message)));
     });
     return promise;
 }

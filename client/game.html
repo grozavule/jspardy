@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="description" content="jsPardy is a free, online trivia game based on Jeopardy" />
     <meta name="keywords" content="trivia, free games, jeopardy, brain teasers" />
+    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css"/>
     <link rel="stylesheet" href="./css/common.css" />
 </head>
 <body>
@@ -13,9 +14,15 @@
         <div id="logo">jsPardy</div>
         <div id="player-score"></div>
     </nav>
-    <content>
+    <content id="game">
         <div id="gameboard-container"></div>
     </content>
+    <div class="arrow" id="arrow-left">
+        <i class="fa-solid fa-circle-chevron-left"></i>
+    </div>
+    <div class="arrow" id="arrow-right">
+        <i class="fa-solid fa-circle-chevron-right"></i>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./js/classes/Question.js" type="module"></script>
     <script src="./js/classes/Category.js" type="module"></script>
@@ -25,6 +32,7 @@
     <script src="./js/classes/QuestionNotFoundError.js" type="module"></script>
     <script src="./js/classes/AxiosError.js" type="module"></script>
     <script src="./js/classes/AnswerSanitizer.js" type="module"></script>
+    <script src="/node_modules/@fortawesome/fontawesome-free/js/fontawesome.min.js"></script>
     <script src="./js/common.js"></script>
     <script src="./js/game.js" type="module"></script>
 </body>

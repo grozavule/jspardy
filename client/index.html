@@ -6,26 +6,39 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="description" content="jsPardy is a free, online trivia game based on Jeopardy" />
     <meta name="keywords" content="trivia, free games, jeopardy, brain teasers" />
+    <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css"/>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="./css/common.css" />
 </head>
 <body>
     <nav>
         <div id="logo">jsPardy</div>
-        <div id="nav-buttons">
-            <form id="login-form">
-                <input type="email" id="login-email" maxlength="100" placeholder="Email Address" required />
-                <input type="password" id="login-password" maxlength="60" placeholder="Password" required />
-                <button id="login">Login</button>
-            </form>
-        </div>
     </nav>
     <content>
+        <section id="login">
+            <div class="titlebar-box">
+                <header class="titlebar">
+                    <h1>Login</h1>
+                </header>
+                <section class="titlebar-box-content">
+                    <form id="login-form">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" maxlength="100" required />
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" maxlength="60" required />
+                        <div class="buttons-container">
+                            <button>Login</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </section>
         <section id="registration">
             <div class="titlebar-box">
                 <div class="titlebar">
-                    <h2>Register to play</h2>
+                    <h1>Register to play</h1>
                 </div>
-                <section>
+                <section class="titlebar-box-content">
                     <form id="register-form">
                         <label for="first-name">First Name</label>
                         <input type="text" id="first-name" maxlength="50" required />
@@ -45,6 +58,8 @@
             </div>
         </section>
     </content>
+    <script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./js/common.js"></script>
     <script src="./js/index.js"></script>

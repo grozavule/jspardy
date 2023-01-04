@@ -1,7 +1,7 @@
 class AnswerSanitizer {
     static parseHTML = (answer) => answer.replaceAll(/(<([^>]+)>)/g, '');
 
-    static replaceSpecialCharacters = (answer) => answer.replaceAll('&', 'and').replaceAll(/\"|\'|!/g, '');
+    static replaceSpecialCharacters = (answer) => answer.replaceAll('&', 'and').replaceAll(/\"|\'|!|\\/g, '');
 
     static removeInsignificantWords = (answer) => answer.replace(/^[aA]|^[tT]he|^[oO]f/, '');
 

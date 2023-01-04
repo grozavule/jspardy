@@ -40,7 +40,9 @@ body {
     font-size:15px;
     color:var(--color-primary);
     background:var(--color-secondary);
-    position:relative;
+    display:flex;
+    flex-direction:column;
+    overflow-x:hidden;
 }
 
 nav {
@@ -51,8 +53,17 @@ nav {
     align-items: center;
     padding:20px;
     box-shadow:var(--box-shadow);
-    width:100vw;
-    height:100px;
+}
+
+nav svg {
+    color:var(--color-tertiary);
+    font-size:30px;
+    cursor: pointer;
+}
+
+h1 {
+    font-size:var(--heading-font-size);
+    font-weight:bold;
 }
 
 button {
@@ -68,13 +79,15 @@ button {
 
 content {
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     justify-content:center;
-    align-items:center;
+    align-items:flex-start;
+    padding:var(--default-padding);
+    flex-wrap:wrap;
+
 }
 
 content > section {
-    height:calc(100vh - 100px);
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -111,19 +124,16 @@ input {
     margin-right:var(--default-padding);
 }
 
-#login-form {
-    display:flex;
-    flex-direction:row;
-    justify-content: space-between;
-    align-content: center;
-}
-
 #logo {
     color:var(--color-tertiary);
     text-shadow:var(--box-shadow);
     font-size:var(--heading-font-size);
     font-weight:bold;
     flex-grow:1;
+}
+
+#login {
+    margin-right:var(--default-padding);
 }
 
 #player-score {
@@ -159,6 +169,7 @@ input {
     padding:var(--default-padding);
     border-top-left-radius:var(--border-radius-size);
     border-top-right-radius:var(--border-radius-size);
+    text-shadow:var(--box-shadow);
 }
 
 .buttons-container {
@@ -166,6 +177,14 @@ input {
     flex-direction:row;
     justify-content: center;
     align-items: center;;
+}
+
+.error-message {
+    background:var(--color-error);
+    color:var(--color-tertiary);
+    font-weight:bold;
+    padding:var(--default-padding);
+    margin-bottom:var(--default-padding);
 }
 
 input.error {
@@ -184,6 +203,7 @@ input.error {
     border:1px solid var(--color-primary);
     box-shadow:var(--box-shadow);
     padding-bottom:var(--default-padding);
+    display:block;
 }
 
 .modal.question-modal {
@@ -259,15 +279,38 @@ div.game-square {
     cursor:default;
 }
 
+.arrow {
+    font-size:50px;
+    color:var(--color-tertiary);
+    position:fixed;
+    top:50%;
+    
+    cursor:pointer;
+    text-shadow:var(--box-shadow);
+    display:none;
+}
+#arrow-right {
+    right:var(--default-padding);
+}
+
+#arrow-left {
+    left:var(--default-padding);
+}
+
 /*** GAME OVER STYLES ***/
 content#game-over {
-    height:90vh;
+    flex-direction: column;
+    align-items:center;
 }
 
 #final-score-container {
     margin-top:var(--default-padding);
     color:var(--color-tertiary);
     text-align:center;
+}
+
+#final-score-container h1 {
+    font-size:30px;
 }
 
 #final-score {
@@ -285,4 +328,50 @@ content#game-over {
     display:block;
     width:100%;
     margin:var(--default-padding) 0;
+}
+
+@media screen and (max-width:1060px){
+    /** HOME STYLES **/
+    content {
+        flex-direction:column;
+        align-content:center;
+    }
+    #login {
+        margin-right:0;
+        margin-bottom:var(--default-padding);
+    }
+    /** GAME STYLES **/
+    content#game {
+        width:100vw;
+        overflow-x:hidden;
+        display:block;
+    }
+    #arrow-left {
+        display:block;
+    }
+    #gameboard-container {
+        /*the width needs to be set to the .category-container width + margin(s) x the number of categories*/
+        width:1620px;
+        display:block;
+        position:relative;
+        left:0px;
+    }
+    .category-container {
+        display:inline;
+        float:left;
+        margin-right:var(--default-padding);
+        width:250px;
+    }
+    .game-square {
+        width:100%;
+    }
+}
+
+@media screen and (max-width:570px){
+    content section, .titlebar-box {
+        width:100%;
+    }
+    .modal.question-modal {
+        width:calc(100%-40px);
+    }
 }

@@ -16,6 +16,58 @@ import { AxiosError } from './classes/AxiosError.js';
 const gameboard = new Gameboard();
 const gameContainer = document.querySelector('#gameboard-container');
 
+const shiftGameboard = e => {
+    const contentContainer = document.querySelector('#game');
+    const gameboardContainer = document.querySelector('#gameboard-container');
+    const categoryContainer = document.querySelector('.category-container');
+    const rightArrow = document.querySelector('#arrow-right');
+    const leftArrow = document.querySelector('#arrow-left');
+
+    let categoryWidth = categoryContainer.offsetWidth;
+    let margin = getComputedStyle(categoryContainer).margin.split(' ').map(value => parseInt(value));
+    let categoriesOnScreen = Math.floor(contentContainer.offsetWidth / (categoryWidth + margin[1] + margin[3]));//calculates how many categories can fit in the content window
+
+    let newPosition = 0;
+    let currentLeftPosition = parseInt(getComputedStyle(gameboardContainer).left);
+    const arrowId = (e.target.id) ? e.target.id : e.currentTarget.id;
+    console.log(arrowId, currentLeftPosition, categoriesOnScreen);
+    switch(arrowId){
+        case 'arrow-left':
+            newPosition = currentLeftPosition - (categoryWidth + margin[1] + margin[3]);
+            gameboardContainer.style.left = newPosition + 'px';
+            break;
+        case 'arrow-right':
+            newPosition = currentLeftPosition + categoryWidth + margin[1] + margin[3];
+            gameboardContainer.style.left = currentLeftPosition + categoryWidth + margin[1] + margin[3] + 'px';
+            break;
+    }
+    console.log(newPosition);
+    //hide the right arrow if the gameboard is at its original position
+    if(newPosition >= 0)
+    {
+        rightArrow.style.display='none';
+    }
+    else
+    {
+        rightArrow.style.display='block';
+    }
+    //hide the left arrow if the gameboard is shifted to the last column on the right
+    if(newPosition <= 0 - gameboardContainer.offsetWidth + (categoriesOnScreen * (categoryWidth + margin[1] + margin[3])))
+    {
+        leftArrow.style.display='none';
+    }
+    else
+    {
+        leftArrow.style.display='block';
+    }
+    
+}
+
+const arrows = document.querySelectorAll('.arrow');
+arrows.forEach(arrow => {
+    arrow.addEventListener('click', shiftGameboard);
+})
+
 let playerScoreContainer = document.querySelector('#player-score');
 playerScoreContainer.innerHTML = `${user.first_name}'s Score: <span id="score">${gameboard.getPlayerScore()}</span>`;
 

@@ -6,6 +6,16 @@ const emailInput = document.querySelector('#email-address');
 const passwordInput = document.querySelector('#password');
 const confirmPasswordInput = document.querySelector('#confirm-password');
 
+const displayLoginError = message => {
+    let container = document.querySelector('#login .titlebar-box-content');
+
+    let messageContainer = document.createElement('div');
+    messageContainer.classList.add('error-message');
+    messageContainer.textContent = message;
+
+    container.prepend(messageContainer);
+}
+
 //handles user login requests
 loginForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -22,7 +32,11 @@ loginForm.addEventListener('submit', e => {
         sessionStorage.setItem('user', JSON.stringify(res.data));
         navigateToGame();
     })
-    .catch(error => createModalMessage(error.response.data, 'error'));
+    .catch(error => {
+        console.log(error);
+        displayLoginError(error.response.data);
+        //createModalMessage(error.response.data, 'error')
+    });
 })
 //handles user registration requests
 registrationForm.addEventListener('submit', e => {
