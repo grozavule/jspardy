@@ -387,6 +387,7 @@ content#game-over {
         width:100%;
     }
     .modal.question-modal {
-        width:calc(100vw-40px);
+        width:calc(100% - 40px);
+        min-width:auto;
     }
 }
